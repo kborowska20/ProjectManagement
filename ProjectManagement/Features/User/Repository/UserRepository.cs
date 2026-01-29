@@ -8,7 +8,7 @@ namespace ProjectManagement.Features.User.Repository
     {
         private readonly DataContext _context = context;
 
-        public async Task<Domain.User?> GetUserByIdAsync(int userId)
+        public async Task<Domain.User?> GetUserByIdAsync(Guid userId)
         {
             return await _context.Users.FirstOrDefaultAsync(x => x != null && x.Id == userId);
         }
@@ -24,13 +24,14 @@ namespace ProjectManagement.Features.User.Repository
             return Task.CompletedTask;
         }
 
-        public Task UpdateUserRoleAsync(int userId, UserRole role)
+        public Task UpdateUserRoleAsync(Guid userId, Guid roleId)
         {
-            return _context.Users
-                .Where(x => x.Id == userId)
-                .ExecuteUpdateAsync(setters => setters
-                    .SetProperty(u => u.RoleId, role.Id)
-                );
+            return null;
+            //return _context.Users
+            //    .Where(x => x.Id == userId)
+            //    .ExecuteUpdateAsync(setters => setters
+            //        .SetProperty(u => u.RoleId, roleId)
+            //    );
         }
     }
 }

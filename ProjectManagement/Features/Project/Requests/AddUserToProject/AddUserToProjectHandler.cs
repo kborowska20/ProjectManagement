@@ -22,10 +22,6 @@ namespace ProjectManagement.Features.Project.Requests.AddUserToProject
             if (console is null)
                 throw new ArgumentNullException("proj not found");
 
-            var console = await _repositoryManager.Project.GetProjectByIdAsync(request.ProjectId);
-
-            if (console is null)
-                throw new ArgumentNullException("proj not found");
 
             //var user = new Domain.User()
             //{
@@ -38,9 +34,8 @@ namespace ProjectManagement.Features.Project.Requests.AddUserToProject
 
             //await _repositoryManager.SaveAsync();
 
-            var result = _mapper.Map<AddUserResult>();
 
-            return result;
+            return null;
         }
     }
 }

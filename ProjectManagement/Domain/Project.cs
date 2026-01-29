@@ -2,7 +2,7 @@
 {
     public class Project
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
         public string ProjectName { get; set; }
         public ICollection<User> Users { get; set; }
         public ICollection<TaskItem> Tasks { get; set; }

@@ -1,24 +1,33 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
-using Microsoft.EntityFrameworkCore.InMemory; // Add this using directive
+using Microsoft.Extensions.DependencyInjection;
+using ProjectManagement;
 using ProjectManagement.Data;
+using ProjectManagement.Features.Project.Repository;
 using ProjectManagement.ServiceManager;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddAutoMapper(typeof(Program).Assembly);
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddScoped<IProjectRepository, ProjectRepository>();
 builder.Services.AddScoped<IRepositoryManager, RepositoryManager>();
-var app = builder.Build();
 builder.Services.AddDbContext<DataContext>(options =>
 {
     options.UseInMemoryDatabase("ProjectMgmtDb")
         .ConfigureWarnings(builder => builder.Ignore(InMemoryEventId.TransactionIgnoredWarning));
 });
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Program).Assembly));
+
+
+var app = builder.Build();
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {

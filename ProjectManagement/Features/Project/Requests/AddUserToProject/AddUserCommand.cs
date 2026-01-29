@@ -2,5 +2,5 @@
 
 namespace ProjectManagement.Features.Project.Requests.AddUserToProject
 {
-    public record AddUserCommand(string Name, string Publisher, int ProjectId) : IRequest<AddUserResult>;
+    public record AddUserCommand(string Name, string Publisher, Guid ProjectId) : IRequest<AddUserResult>;
 }

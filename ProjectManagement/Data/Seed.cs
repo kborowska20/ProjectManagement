@@ -12,9 +12,9 @@ namespace ProjectManagement.Data
             if (!context.UserRoles.Any())
             {
                 context.UserRoles.AddRange(
-                    new UserRole { Id = 1, RoleName = "Admin" },
-                    new UserRole { Id = 2, RoleName = "Manager" },
-                    new UserRole { Id = 3, RoleName = "Developer" }
+                    new UserRole { Id = new Guid(), RoleName = "Admin" },
+                    new UserRole { Id = new Guid(), RoleName = "Manager" },
+                    new UserRole { Id = new Guid(), RoleName = "Developer" }
                 );
                 context.SaveChanges();
             }
@@ -23,11 +23,11 @@ namespace ProjectManagement.Data
             if (!context.Users.Any())
             {
                 context.Users.AddRange(
-                    new User { Id = 1, Name = "Joe Doe", Email = "joe.doe@example.com", RoleId = 1 },
-                    new User { Id = 2, Name = "Jane Smith", Email = "jane.smith@example.com", RoleId = 2 },
-                    new User { Id = 3, Name = "Alice Johnson", Email = "alice.johnson@example.com", RoleId = 3 },
-                    new User { Id = 4, Name = "Bob Brown", Email = "bob.brown@example.com", RoleId = 3 },
-                    new User { Id = 5, Name = "Carol White", Email = "carol.white@example.com", RoleId = 2 }
+                    new User { Id = new Guid(), Name = "Joe Doe", Email = "joe.doe@example.com", RoleId = 1 },
+                    new User { Id = new Guid(), Name = "Jane Smith", Email = "jane.smith@example.com", RoleId = 2 },
+                    new User { Id = new Guid(), Name = "Alice Johnson", Email = "alice.johnson@example.com", RoleId = 3 },
+                    new User { Id = new Guid(), Name = "Bob Brown", Email = "bob.brown@example.com", RoleId = 3 },
+                    new User { Id = new Guid(), Name = "Carol White", Email = "carol.white@example.com", RoleId = 2 }
                 );
                 context.SaveChanges();
             }
@@ -35,9 +35,9 @@ namespace ProjectManagement.Data
             if (!context.Tasks.Any())
             {
                 context.Tasks.AddRange(
-                    new TaskItem() { Id = 1, Title = "Task 1", Desc = "joe.doe@example.com", UserId = 1, ProjectId = 3},
-                    new TaskItem() { Id = 2, Title = "Task 2", Desc = "jane.smith@example.com", UserId = 2,  ProjectId = 3 },
-                    new TaskItem() { Id = 3, Title = "Task 3", Desc = "alice.johnson@example.com", UserId = 3 , ProjectId = 1 }
+                    new TaskItem() { Id = new Guid(), Title = "Task 1", Desc = "joe.doe@example.com", UserId = 1, ProjectId = 3},
+                    new TaskItem() { Id = new Guid(), Title = "Task 2", Desc = "jane.smith@example.com", UserId = 2,  ProjectId = 3 },
+                    new TaskItem() { Id = new Guid(), Title = "Task 3", Desc = "alice.johnson@example.com", UserId = 3 , ProjectId = 1 }
                 );
                 context.SaveChanges();
             }
@@ -46,9 +46,9 @@ namespace ProjectManagement.Data
             if (!context.ProjectStatuses.Any())
             {
                 context.ProjectStatuses.AddRange(
-                    new ProjectStatus { Id = 1, StatusName = "Active" },
-                    new ProjectStatus { Id = 2, StatusName = "On Hold" },
-                    new ProjectStatus { Id = 3, StatusName = "Completed" }
+                    new ProjectStatus { Id = new Guid(), StatusName = "Active" },
+                    new ProjectStatus { Id = new Guid(), StatusName = "On Hold" },
+                    new ProjectStatus { Id = new Guid(), StatusName = "Completed" }
                 );
                 context.SaveChanges();
             }
@@ -57,9 +57,9 @@ namespace ProjectManagement.Data
             if (!context.Projects.Any())
             {
                 context.Projects.AddRange(
-                    new Project {Id = 1, ProjectName = "Project Alpha" },
-                    new Project {Id = 2, ProjectName = "Project Beta" },
-                    new Project {Id = 3, ProjectName = "Project Gamma" }
+                    new Project { Id = Guid.Parse("11111111-2222-3333-4444-555555555555"), ProjectName = "Project Delta", Description = "Internal tooling upgrade" },
+                    new Project { Id = Guid.Parse("11111111-2222-3333-4444-555555555556"), ProjectName = "Project Epsilon", Description = "Customer onboarding improvements" },
+                    new Project { Id = Guid.Parse("11111111-2222-3333-4444-555555555557"), ProjectName = "Project Zeta", Description = "Mobile app revamp" }
                 );
                 context.SaveChanges();
             }
