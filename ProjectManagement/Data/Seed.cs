@@ -32,6 +32,16 @@ namespace ProjectManagement.Data
                 context.SaveChanges();
             }
 
+            if (!context.Tasks.Any())
+            {
+                context.Tasks.AddRange(
+                    new TaskItem() { Id = 1, Title = "Task 1", Desc = "joe.doe@example.com", UserId = 1, ProjectId = 3},
+                    new TaskItem() { Id = 2, Title = "Task 2", Desc = "jane.smith@example.com", UserId = 2,  ProjectId = 3 },
+                    new TaskItem() { Id = 3, Title = "Task 3", Desc = "alice.johnson@example.com", UserId = 3 , ProjectId = 1 }
+                );
+                context.SaveChanges();
+            }
+
             // Create project statuses
             if (!context.ProjectStatuses.Any())
             {

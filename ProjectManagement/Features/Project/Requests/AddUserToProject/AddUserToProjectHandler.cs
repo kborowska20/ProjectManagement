@@ -20,7 +20,12 @@ namespace ProjectManagement.Features.Project.Requests.AddUserToProject
             var console = await _repositoryManager.Project.GetProjectByIdAsync(request.ProjectId);
 
             if (console is null)
-                throw new NoConsoleExistsException(request.ProjectId);
+                throw new ArgumentNullException("proj not found");
+
+            var console = await _repositoryManager.Project.GetProjectByIdAsync(request.ProjectId);
+
+            if (console is null)
+                throw new ArgumentNullException("proj not found");
 
             //var user = new Domain.User()
             //{
