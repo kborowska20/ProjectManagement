@@ -18,9 +18,11 @@ namespace ProjectManagement.Features.User.Repository
             await _context.Users.AddAsync(user);
         }
 
-        public Task UpdateUserAsync(Domain.User? user)
+        public async Task<Task> UpdateUserAsync(Domain.User? user)
         {
-            _context.Users.Update(user);
+            var userFind = await _context.Users.FindAsync(user);
+            ArgumentNullException.ThrowIfNull(userFind);
+            _context.Users.Update(userFind);
             return Task.CompletedTask;
         }
 
@@ -34,9 +36,15 @@ namespace ProjectManagement.Features.User.Repository
             }
         }
 
-        public void AddUserToProject(Guid userId, Guid projectId)
+        public async void AddUserToProject(UsersProjectTask usersProjectTask)
         {
-            
+            var project = await _context.Projects.FindAsync(usersProjectTask.ProjectId);
+            var user = await _context.Users.FindAsync(usersProjectTask.UserId);
+            if (project != null&& user !=  null)
+            {
+                await _context.UserTaskItems.AddAsync(usersProjectTask);
+                await _context.SaveChangesAsync();
+            }
         }
     }
 }

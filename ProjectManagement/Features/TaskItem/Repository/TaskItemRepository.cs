@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ProjectManagement.Data;
 using ProjectManagement.Domain;
+using System.Threading.Tasks;
 
 namespace ProjectManagement.Features.TaskItem.Repository
 {
@@ -10,28 +11,43 @@ namespace ProjectManagement.Features.TaskItem.Repository
 
         public async Task AssignTaskToProject(UsersProjectTask usersProjectTask)
         {
-            await _context.UserTaskItems.AddAsync(usersProjectTask);
-            await _context.SaveChangesAsync();
+            var task = await _context.Tasks.FindAsync(usersProjectTask.TaskId);
+            var project = await _context.Projects.FindAsync(usersProjectTask.ProjectId);
+
+            if (task != null && project is not null)
+            {
+                await _context.UserTaskItems.AddAsync(usersProjectTask);
+                await _context.SaveChangesAsync();
+            }
         }
 
-        public Task AssignTaskToUser(Guid taskId, Guid userId)
+        public async Task AssignTaskToUser(UsersProjectTask usersProjectTask)
         {
-            throw new NotImplementedException();
+            var task = await _context.Tasks.FindAsync(usersProjectTask.TaskId);
+            var user = await _context.Users.FindAsync(usersProjectTask.ProjectId);
+
+            if (task != null && user is not null)
+            {
+                await _context.UserTaskItems.AddAsync(usersProjectTask);
+                await _context.SaveChangesAsync();
+            }
         }
 
-        public Task CreateTaskAsync(Domain.User? user)
+        public async Task CreateTaskAsync(Domain.TaskItem? task)
         {
-            throw new NotImplementedException();
+            if (task != null)
+            {
+                await _context.Tasks.AddAsync(task);
+                await _context.SaveChangesAsync();
+            }
         }
 
-        public Task<Domain.TaskItem?> GetTaskByIdAsync(Guid taskId)
+        public async Task<Domain.TaskItem?> GetTaskByIdAsync(Guid taskId)
         {
-            throw new NotImplementedException();
-        }
-
-        public async Task<Domain.TaskItem?> GetUserByIdAsync(Guid taskId)
-        {
-            return await _context.Tasks.FirstOrDefaultAsync(x => x != null && x.Id == taskId);
+            var t = await _context.Tasks
+                .FirstOrDefaultAsync(x => x != null && x.Id == taskId);
+            ArgumentNullException.ThrowIfNull(t);
+            return t;
         }
 
     }
