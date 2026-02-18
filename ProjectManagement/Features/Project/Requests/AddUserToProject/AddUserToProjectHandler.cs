@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
+using ProjectManagement.Domain;
 using ProjectManagement.ServiceManager;
 
 namespace ProjectManagement.Features.Project.Requests.AddUserToProject
@@ -17,25 +18,30 @@ namespace ProjectManagement.Features.Project.Requests.AddUserToProject
 
         public async Task<AddUserResult> Handle(AddUserCommand request, CancellationToken cancellationToken)
         {
-            var console = await _repositoryManager.Project.GetProjectByIdAsync(request.ProjectId);
+            var project = await _repositoryManager.Project.GetProjectByIdAsync(request.ProjectId);
 
-            if (console is null)
-                throw new ArgumentNullException("proj not found");
+            if (project is null)
+                throw new ArgumentNullException("project not found");
 
+            var user = await _repositoryManager.User.GetUserByIdAsync(request.UserId);
 
-            //var user = new Domain.User()
-            //{
-            //    Name = request.Name,
-            //    Publisher = request.Publisher,
-            //    ConsoleId = request.ConsoleId
-            //};
+            if (user is null)
+                throw new ArgumentNullException("user not found");
 
-            //_repositoryManager.Project.AddGameToConsole(request.ConsoleId, game);
+            var usersProjectTask = new UsersProjectTask()
+            {
+                ProjectId = request.ProjectId,
+                TaskId = null,
+                UserId = request.UserId
+            };
 
-            //await _repositoryManager.SaveAsync();
+            _repositoryManager.Project.AssignUserToProject(usersProjectTask);
 
+            await _repositoryManager.SaveAsync();
 
-            return null;
+            var result = _mapper.Map<AddUserResult>(usersProjectTask);
+
+            return result;
         }
     }
 }

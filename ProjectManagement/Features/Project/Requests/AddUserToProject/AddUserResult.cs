@@ -1,4 +1,4 @@
 ﻿namespace ProjectManagement.Features.Project.Requests.AddUserToProject
 {
-    public record AddUserResult(int Id, string Name, string Publisher, int ProjectId);
+    public record AddUserResult(Guid UserId, string Publisher, Guid ProjectId);
 }

@@ -24,14 +24,19 @@ namespace ProjectManagement.Features.User.Repository
             return Task.CompletedTask;
         }
 
-        public Task UpdateUserRoleAsync(Guid userId, Guid roleId)
+        public async Task UpdateUserRoleAsync(Guid userId, UserRole role)
         {
-            return null;
-            //return _context.Users
-            //    .Where(x => x.Id == userId)
-            //    .ExecuteUpdateAsync(setters => setters
-            //        .SetProperty(u => u.RoleId, roleId)
-            //    );
+            var user = await _context.Users.FindAsync(userId);
+            if (user != null)
+            {
+                user.Role = role;
+                await _context.SaveChangesAsync();
+            }
+        }
+
+        public void AddUserToProject(Guid userId, Guid projectId)
+        {
+            
         }
     }
 }

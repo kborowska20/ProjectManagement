@@ -1,5 +1,6 @@
 ﻿using ProjectManagement.Data;
 using ProjectManagement.Features.Project.Repository;
+using ProjectManagement.Features.TaskItem.Repository;
 using ProjectManagement.Features.User.Repository;
 using ProjectManagement.ServiceManager;
 
@@ -11,6 +12,7 @@ namespace ProjectManagement
         private readonly DataContext _context;
         private IProjectRepository _projectRepository;
         private IUserRepository _userRepository;
+        private ITaskItemRepository _taskRepository;
 
         public RepositoryManager(DataContext context)
         {
@@ -34,6 +36,19 @@ namespace ProjectManagement
                 return _userRepository;
             }
         }
+
+
+        public ITaskItemRepository TaskItem
+        {
+            get
+            {
+                if (_taskRepository == null)
+                    _taskRepository = new TaskItemRepository(_context);
+                return _taskRepository;
+
+            }
+        }
+
         public Task SaveAsync()
         {
             return _context.SaveChangesAsync();

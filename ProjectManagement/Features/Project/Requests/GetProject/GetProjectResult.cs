@@ -8,6 +8,6 @@ namespace ProjectManagement.Features.Project.Requests.GetProject
         string Description,
         ProjectStatus Status,
         IEnumerable<Domain.User> Users,
-        IEnumerable<TaskItem> Tasks
+        IEnumerable<Domain.TaskItem> Tasks
     );
 }

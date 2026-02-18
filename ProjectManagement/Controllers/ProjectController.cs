@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System;
+using ProjectManagement.Features.Project.Requests.AddUserToProject;
 using ProjectManagement.Features.Project.Requests.GetProject;
 
 namespace ProjectManagement.Controllers
@@ -28,6 +29,20 @@ namespace ProjectManagement.Controllers
             if (project == null)
             {
                 return NotFound($"Order with ID {id} not found.");
+            }
+
+            return Ok(project);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> AssignUserToProject(AddUserCommand userCommand)
+        {
+
+            var project = await _mediator.Send(userCommand);
+
+            if (project == null)
+            {
+                return NotFound($"Project with ID {userCommand.ProjectId} not found.");
             }
 
             return Ok(project);

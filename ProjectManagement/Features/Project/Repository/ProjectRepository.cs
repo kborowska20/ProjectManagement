@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ProjectManagement.Data;
 using ProjectManagement.Domain;
+using System.Threading.Tasks;
 
 namespace ProjectManagement.Features.Project.Repository
 {
@@ -11,10 +12,6 @@ namespace ProjectManagement.Features.Project.Repository
         {
             _context = context;
         }
-        public Task<IEnumerable<Domain.Project>> GetAllConsolesAsync()
-        {
-            throw new NotImplementedException();
-        }
 
         public async Task<Domain.Project> GetProjectByIdAsync(Guid projectId)
         {
@@ -22,29 +19,20 @@ namespace ProjectManagement.Features.Project.Repository
                 .FirstOrDefaultAsync(x => x.Id == projectId);
         }
 
-        public Task CreateProjectAsync(Domain.Project project)
+        public async Task AssignUserToProject(UsersProjectTask usersProjectTask)
         {
-            throw new NotImplementedException();
+            await _context.UserTaskItems.AddAsync(usersProjectTask);
+            await _context.SaveChangesAsync(); 
         }
 
-        public Task UpdateProjectAsync(Domain.Project project)
+        public async Task UpdateProjectStatus(Guid projectId, ProjectStatus status)
         {
-            throw new NotImplementedException();
-        }
-
-        public Task DeleteProjectAsync(int projectId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task AssignUserToProject(int projectId, int userId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task UpdateProjectStatus(int projectId, ProjectStatus status)
-        {
-            throw new NotImplementedException();
+            var project = await _context.Projects.FindAsync(projectId);
+            if (project != null)
+            {
+                project.Status = status;
+                await _context.SaveChangesAsync();
+            }
         }
     }
 }
