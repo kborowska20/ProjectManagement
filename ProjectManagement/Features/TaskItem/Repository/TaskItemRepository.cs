@@ -11,24 +11,24 @@ namespace ProjectManagement.Features.TaskItem.Repository
 
         public async Task AssignTaskToProject(UsersProjectTask usersProjectTask)
         {
-            var task = await _context.Tasks.FindAsync(usersProjectTask.TaskId);
+            var task = await _context.TaskItems.FindAsync(usersProjectTask.TaskId);
             var project = await _context.Projects.FindAsync(usersProjectTask.ProjectId);
 
             if (task != null && project is not null)
             {
-                await _context.UserTaskItems.AddAsync(usersProjectTask);
+                await _context.UsersProjectTasks.AddAsync(usersProjectTask);
                 await _context.SaveChangesAsync();
             }
         }
 
         public async Task AssignTaskToUser(UsersProjectTask usersProjectTask)
         {
-            var task = await _context.Tasks.FindAsync(usersProjectTask.TaskId);
+            var task = await _context.TaskItems.FindAsync(usersProjectTask.TaskId);
             var user = await _context.Users.FindAsync(usersProjectTask.ProjectId);
 
             if (task != null && user is not null)
             {
-                await _context.UserTaskItems.AddAsync(usersProjectTask);
+                await _context.UsersProjectTasks.AddAsync(usersProjectTask);
                 await _context.SaveChangesAsync();
             }
         }
@@ -37,14 +37,14 @@ namespace ProjectManagement.Features.TaskItem.Repository
         {
             if (task != null)
             {
-                await _context.Tasks.AddAsync(task);
+                await _context.TaskItems.AddAsync(task);
                 await _context.SaveChangesAsync();
             }
         }
 
         public async Task<Domain.TaskItem?> GetTaskByIdAsync(Guid taskId)
         {
-            var t = await _context.Tasks
+            var t = await _context.TaskItems
                 .FirstOrDefaultAsync(x => x != null && x.Id == taskId);
             ArgumentNullException.ThrowIfNull(t);
             return t;

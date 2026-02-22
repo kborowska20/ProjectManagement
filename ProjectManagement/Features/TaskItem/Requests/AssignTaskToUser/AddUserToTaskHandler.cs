@@ -1,22 +1,24 @@
 ﻿using AutoMapper;
 using MediatR;
+using ProjectManagement.Domain;
+using ProjectManagement.Features.Project.Requests.AddUserToProject;
 using ProjectManagement.Features.User.Repository;
 using ProjectManagement.ServiceManager;
 
 namespace ProjectManagement.Features.TaskItem.Requests.AddUserToProject
 {
-    public class AddUserToTaskHandler : IRequestHandler<AddUserCommand, AddUserResult>
+    public class AddTaskToProjectHandler : IRequestHandler<AddTaskToUserCommand, AddProjectResult>
     {
         private readonly IRepositoryManager _repositoryManager;
         private readonly IMapper _mapper;
 
-        public AddUserToTaskHandler(IRepositoryManager repositoryManager, IMapper mapper)
+        public AddTaskToProjectHandler(IRepositoryManager repositoryManager, IMapper mapper)
         {
             _repositoryManager = repositoryManager;
             _mapper = mapper;
         }
 
-        public async Task<AddUserResult> Handle(AddUserCommand request, CancellationToken cancellationToken)
+        public async Task<AddProjectResult> Handle(AddTaskToUserCommand request, CancellationToken cancellationToken)
         {
             var task = await _repositoryManager.TaskItem.GetTaskByIdAsync(request.TaskId);
 
@@ -28,11 +30,19 @@ namespace ProjectManagement.Features.TaskItem.Requests.AddUserToProject
             if (user is null)
                 throw new ArgumentNullException("user not found");
 
-            _repositoryManager.TaskItem.AssignTaskToUser(request.UserId, request.TaskId);
+            var usersProjectTask = new UsersProjectTask()
+            {
+                ProjectId = null,
+                TaskId = request.TaskId,
+                UserId = request.UserId
+            };
+            _repositoryManager.TaskItem.AssignTaskToUser(usersProjectTask);
              
             await _repositoryManager.SaveAsync();
 
-            return null;
+            var result = _mapper.Map<AddProjectResult>(usersProjectTask);
+
+            return result;
         }
     }
 }

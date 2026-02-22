@@ -26,14 +26,21 @@ namespace ProjectManagement.Features.User.Repository
             return Task.CompletedTask;
         }
 
-        public async Task UpdateUserRoleAsync(Guid userId, UserRole role)
+        public async Task<UserRole> UpdateUserRoleAsync(Guid userId, Guid roleId)
         {
             var user = await _context.Users.FindAsync(userId);
-            if (user != null)
+
+            var role = await _context.UserRoles.FindAsync(roleId);
+            if (role == null)
+            {
+                throw new ArgumentNullException("role not found");
+            }
+            if (user != null && role != null)
             {
                 user.Role = role;
                 await _context.SaveChangesAsync();
             }
+            return role;
         }
 
         public async void AddUserToProject(UsersProjectTask usersProjectTask)
@@ -42,7 +49,7 @@ namespace ProjectManagement.Features.User.Repository
             var user = await _context.Users.FindAsync(usersProjectTask.UserId);
             if (project != null&& user !=  null)
             {
-                await _context.UserTaskItems.AddAsync(usersProjectTask);
+                await _context.UsersProjectTasks.AddAsync(usersProjectTask);
                 await _context.SaveChangesAsync();
             }
         }

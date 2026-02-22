@@ -6,6 +6,6 @@ namespace ProjectManagement.Features.Project.Repository
     {
         Task<Domain.Project> GetProjectByIdAsync(Guid projectId);
         Task AssignUserToProject(UsersProjectTask usersProjectTask);
-        Task UpdateProjectStatus(Guid projectId, ProjectStatus status);
+        Task<ProjectStatus> UpdateProjectStatus(Guid projectId, Guid statusId);
     }
 }

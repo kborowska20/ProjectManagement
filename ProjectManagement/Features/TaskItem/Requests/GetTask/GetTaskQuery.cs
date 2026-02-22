@@ -1,6 +1,6 @@
 ﻿using MediatR;
 
-namespace ProjectManagement.Features.Project.Requests.GetProject
+namespace ProjectManagement.Features.TaskItem.Requests.GetTask
 {
     public record GetTaskQuery(Guid Id) : IRequest<GetTaskResult>;
 }

@@ -4,25 +4,25 @@ using ProjectManagement.ServiceManager;
 
 namespace ProjectManagement.Features.Project.Requests.GetProject
 {
-    public class GetProjectHandler : IRequestHandler<GetProjectQuery,GetProjectResult>
+    public class GetTaskHandler : IRequestHandler<GetTaskQuery,GetTaskResult>
     {
         private readonly IRepositoryManager _repositoryManager;
         private readonly IMapper _mapper;
 
-        public GetProjectHandler(IRepositoryManager repositoryManager, IMapper mapper)
+        public GetTaskHandler(IRepositoryManager repositoryManager, IMapper mapper)
         {
             _repositoryManager = repositoryManager;
             _mapper = mapper;
         }
 
-        public async Task<GetProjectResult> Handle(GetProjectQuery request, CancellationToken cancellationToken)
+        public async Task<GetTaskResult> Handle(GetTaskQuery request, CancellationToken cancellationToken)
         {
             var project = await _repositoryManager.Project.GetProjectByIdAsync(request.Id);
 
             if (project is null)
                 throw new ArgumentNullException("proj not found");
 
-            return new GetProjectResult(project.Id, project.ProjectName, project.Description, project.Status, project.Users, project.Tasks); ;
+            return new GetTaskResult(project.Id, project.ProjectName, project.Description, project.Status, project.Users, project.Tasks); ;
         }
     }
 }

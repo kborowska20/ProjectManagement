@@ -15,24 +15,59 @@ namespace ProjectManagement.Features.Project.Repository
 
         public async Task<Domain.Project> GetProjectByIdAsync(Guid projectId)
         {
-            return await _context.Projects
+            var project = await _context.Projects
+                .Include(p => p.Status)  // Eagerly load Status
                 .FirstOrDefaultAsync(x => x.Id == projectId);
+
+            if (project != null)
+            {
+                // No need to reload Status - it's already loaded
+                // project.Status = await _context.ProjectStatuses...
+
+                // Get all user-task assignments for this project
+                var userTaskAssignments = await _context.UsersProjectTasks
+                    .Where(upt => upt.ProjectId == projectId)
+                    .ToListAsync();
+
+                // Get distinct user IDs and task IDs
+                var userIds = userTaskAssignments.Select(upt => upt.UserId).Distinct().ToList();
+                var taskIds = userTaskAssignments.Select(upt => upt.TaskId).Distinct().ToList();
+
+                // Load users and tasks
+                project.Users = await _context.Users
+                    .Where(u => userIds.Contains(u.Id))
+                    .ToListAsync();
+
+                project.Tasks = await _context.TaskItems
+                    .Where(t => taskIds.Contains(t.Id))
+                    .ToListAsync();
+            }
+
+            return project;
         }
 
         public async Task AssignUserToProject(UsersProjectTask usersProjectTask)
         {
-            await _context.UserTaskItems.AddAsync(usersProjectTask);
-            await _context.SaveChangesAsync(); 
+            await _context.UsersProjectTasks.AddAsync(usersProjectTask);
+            await _context.SaveChangesAsync();
         }
 
-        public async Task UpdateProjectStatus(Guid projectId, ProjectStatus status)
+        public async Task<ProjectStatus> UpdateProjectStatus(Guid projectId, Guid statusId)
         {
             var project = await _context.Projects.FindAsync(projectId);
-            if (project != null)
+            var projectStatus = await _context.ProjectStatuses.FindAsync(statusId);
+            if (projectStatus == null)
             {
-                project.Status = status;
+                throw new ArgumentNullException("task not found");
+            }
+
+            if (project != null && projectStatus is not null)
+            {
+                project.Status = projectStatus;
                 await _context.SaveChangesAsync();
             }
+
+            return projectStatus;
         }
     }
 }

@@ -7,7 +7,7 @@ namespace ProjectManagement.Features.User.Repository
         Task<Domain.User?> GetUserByIdAsync(Guid userId);
         Task CreateUserAsync(Domain.User? user);
         Task<Task> UpdateUserAsync(Domain.User? user);
-        Task UpdateUserRoleAsync(Guid userId, UserRole role);
+        Task<UserRole> UpdateUserRoleAsync(Guid userId, Guid roleId);
         void AddUserToProject(UsersProjectTask usersProjectTask);
     }
 }

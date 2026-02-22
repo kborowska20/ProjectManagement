@@ -6,15 +6,15 @@ using System;
 using ProjectManagement.Features.Project.Requests.AddUserToProject;
 using ProjectManagement.Features.Project.Requests.GetProject;
 
-namespace ProjectManagement.Controllers
+namespace ProjectManagement.Features.Project
 {
     [ApiController]
     [Route("[controller]")]
-    public class TaskController : ControllerBase
+    public class ProjectController : ControllerBase
     {
         private readonly IMediator _mediator;
 
-        public TaskController(IMediator mediator)
+        public ProjectController(IMediator mediator)
         {
             _mediator = mediator;
         }
@@ -23,7 +23,7 @@ namespace ProjectManagement.Controllers
         public async Task<ActionResult> GetProject(Guid id)
         {
 
-            var query = new GetProjectQuery(id);
+            var query = new GetTaskQuery(id);
             var project = await _mediator.Send(query);
 
             if (project == null)
@@ -34,5 +34,18 @@ namespace ProjectManagement.Controllers
             return Ok(project);
         }
 
+        [HttpPost]
+        public async Task<ActionResult> AssignUserToProject(AddUserToProjectCommand userToProjectCommand)
+        {
+
+            var project = await _mediator.Send(userToProjectCommand);
+
+            if (project == null)
+            {
+                return NotFound($"Project with ID {userToProjectCommand.ProjectId} not found.");
+            }
+
+            return Ok(project);
+        }
     }
 }
