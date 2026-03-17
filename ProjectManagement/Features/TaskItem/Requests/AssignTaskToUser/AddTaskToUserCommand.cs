@@ -1,6 +1,7 @@
 ﻿using MediatR;
+using ProjectManagement.Domain;
 
 namespace ProjectManagement.Features.TaskItem.Requests.AddUserToProject
 {
-    public record AddTaskToUserCommand(Guid UserId, Guid TaskId) : IRequest<AddProjectResult>;
+    public record AddTaskToUserCommand(Guid TaskId,Guid UserId) : IRequest<AddTaskToUserResult>;
 }

@@ -2,5 +2,5 @@
 
 namespace ProjectManagement.Features.Project.Requests.GetProject
 {
-    public record GetTaskQuery(Guid Id) : IRequest<GetTaskResult>;
+    public record GetProjectQuery(Guid Id) : IRequest<GetProjectResult>;
 }

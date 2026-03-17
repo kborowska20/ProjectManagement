@@ -1,26 +1,23 @@
 ﻿using AutoMapper;
 using MediatR;
 using ProjectManagement.Domain;
-using ProjectManagement.Features.Project.Requests.AddUserToProject;
-using ProjectManagement.Features.TaskItem.Request.AssignTaskToProject;
 using ProjectManagement.Features.TaskItem.Requests.AssignTaskToProject;
-using ProjectManagement.Features.User.Repository;
 using ProjectManagement.ServiceManager;
 
 namespace ProjectManagement.Features.TaskItem.Requests
 {
-    public class AddTaskToProjectHandler : IRequestHandler<AddProjectCommand, AddProjectResult>
+    public class AssignTaskToProjectHandler : IRequestHandler<AssignTaskToProjectCommand, AssignTaskToProjectResult>
     {
         private readonly IRepositoryManager _repositoryManager;
         private readonly IMapper _mapper;
 
-        public AddTaskToProjectHandler(IRepositoryManager repositoryManager, IMapper mapper)
+        public AssignTaskToProjectHandler(IRepositoryManager repositoryManager, IMapper mapper)
         {
             _repositoryManager = repositoryManager;
             _mapper = mapper;
         }
 
-        public async Task<AddProjectResult> Handle(AddProjectCommand request, CancellationToken cancellationToken)
+        public async Task<AssignTaskToProjectResult> Handle(AssignTaskToProjectCommand request, CancellationToken cancellationToken)
         {
             var task = await _repositoryManager.TaskItem.GetTaskByIdAsync(request.TaskId);
 
@@ -42,7 +39,7 @@ namespace ProjectManagement.Features.TaskItem.Requests
              
             await _repositoryManager.SaveAsync();
 
-            var result = _mapper.Map<AddProjectResult>(usersProjectTask);
+            var result = _mapper.Map<AssignTaskToProjectResult>(usersProjectTask);
 
             return result;
         }

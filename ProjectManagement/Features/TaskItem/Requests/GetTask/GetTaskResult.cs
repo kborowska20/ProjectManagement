@@ -6,7 +6,7 @@ namespace ProjectManagement.Features.TaskItem.Requests.GetTask
         Guid Id,
         string Title,
         string Description,
-        Guid? Project,
-        Guid? User
+        Guid ProjectId,
+        Guid? AssignedUserId
     );
 }

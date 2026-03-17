@@ -3,7 +3,7 @@ using MediatR;
 using ProjectManagement.Features.TaskItem.Requests.GetTask;
 using ProjectManagement.ServiceManager;
 
-namespace TaskManagement.Features.Task.Requests.GetTask
+namespace ProjectManagement.Features.TaskItem.Requests.GetTask
 {
     public class GetTaskHandler : IRequestHandler<GetTaskQuery, GetTaskResult>
     {
@@ -26,9 +26,9 @@ namespace TaskManagement.Features.Task.Requests.GetTask
             return new GetTaskResult(
                 task.Id,
                 task.Title,
-                task.Desc,
-                task.Project?.Id, // Pass the Project Id (Guid?) instead of the Project object
-                task.User?.Id     // Pass the User Id (Guid?) instead of the User object
+                task.Description,
+                task.ProjectId,
+                task.AssignedUserId
             );
         }
     }

@@ -7,18 +7,18 @@ using ProjectManagement.ServiceManager;
 
 namespace ProjectManagement.Features.TaskItem.Requests.AddUserToProject
 {
-    public class AddTaskToProjectHandler : IRequestHandler<AddTaskToUserCommand, AddProjectResult>
+    public class AddTaskToUserHandler : IRequestHandler<AddTaskToUserCommand, AddTaskToUserResult>
     {
         private readonly IRepositoryManager _repositoryManager;
         private readonly IMapper _mapper;
 
-        public AddTaskToProjectHandler(IRepositoryManager repositoryManager, IMapper mapper)
+        public AddTaskToUserHandler(IRepositoryManager repositoryManager, IMapper mapper)
         {
             _repositoryManager = repositoryManager;
             _mapper = mapper;
         }
 
-        public async Task<AddProjectResult> Handle(AddTaskToUserCommand request, CancellationToken cancellationToken)
+        public async Task<AddTaskToUserResult> Handle(AddTaskToUserCommand request, CancellationToken cancellationToken)
         {
             var task = await _repositoryManager.TaskItem.GetTaskByIdAsync(request.TaskId);
 
@@ -40,7 +40,7 @@ namespace ProjectManagement.Features.TaskItem.Requests.AddUserToProject
              
             await _repositoryManager.SaveAsync();
 
-            var result = _mapper.Map<AddProjectResult>(usersProjectTask);
+            var result = _mapper.Map<AddTaskToUserResult>(usersProjectTask);
 
             return result;
         }

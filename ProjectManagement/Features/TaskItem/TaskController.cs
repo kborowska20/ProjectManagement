@@ -1,8 +1,8 @@
 using MediatR;
-using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using System;
+using ProjectManagement.Features.TaskItem.Requests.AddUserToProject;
+using ProjectManagement.Features.TaskItem.Requests.AssignTaskToProject;
+using ProjectManagement.Features.TaskItem.Requests.CreateTask;
 using ProjectManagement.Features.TaskItem.Requests.GetTask;
 
 namespace ProjectManagement.Features.TaskItem
@@ -19,19 +19,44 @@ namespace ProjectManagement.Features.TaskItem
         }
 
         [HttpGet("{id:guid}")]
-        public async Task<ActionResult> GetProject(Guid id)
+        public async Task<ActionResult<GetTaskResult>> GetTask(Guid id)
         {
-
             var query = new GetTaskQuery(id);
             var task = await _mediator.Send(query);
 
             if (task == null)
             {
-                return NotFound($"Order with ID {id} not found.");
+                return NotFound($"Task with ID {id} not found.");
             }
 
             return Ok(task);
         }
 
+        [HttpPost]
+        public async Task<ActionResult<Domain.TaskItem>> CreateTask(CreateTaskItemCommand command)
+        {
+            var task = await _mediator.Send(command);
+
+            return CreatedAtAction(
+                nameof(GetTask),
+                new { id = task.Id },
+                task
+            );
+        }
+
+        [HttpPost("assignUser")]
+        public async Task<ActionResult> AssignTaskToUser(AddTaskToUserCommand command)
+        {
+            await _mediator.Send(command);
+            return NoContent();
+        }
+
+        [HttpPost("assignProject")]
+        public async Task<ActionResult> AssignTaskToProject(AssignTaskToProjectCommand command)
+        {
+
+            await _mediator.Send(command);
+            return NoContent();
+        }
     }
 }

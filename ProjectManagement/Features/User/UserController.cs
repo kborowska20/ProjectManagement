@@ -1,10 +1,8 @@
 using MediatR;
-using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using System;
-using ProjectManagement.Features.Project.Requests.AddUserToProject;
-using ProjectManagement.Features.Project.Requests.GetProject;
+using ProjectManagement.Features.User.Requests.CreateUser;
+using ProjectManagement.Features.User.Requests.GetUser;
+using ProjectManagement.Features.User.Requests.UpdateUserRole;
 
 namespace ProjectManagement.Features.User
 {
@@ -19,19 +17,41 @@ namespace ProjectManagement.Features.User
             _mediator = mediator;
         }
 
-        [HttpGet("{id:guid}")]
-        public async Task<ActionResult> GetProject(Guid id)
+        [HttpPost]
+        public async Task<ActionResult<Domain.User>> CreateUser(CreateUserCommand command)
         {
+            var user = await _mediator.Send(command);
 
-            var query = new GetTaskQuery(id);
-            var project = await _mediator.Send(query);
+            return CreatedAtAction(
+                nameof(GetUser),
+                "User created successfully"
+            );
+        }
 
-            if (project == null)
+        [HttpPut]
+        public async Task<ActionResult> UpdateUserRole(UpdateUserRoleCommand command)
+        {
+            if (command.UserId != command.UserId)
             {
-                return NotFound($"Order with ID {id} not found.");
+                return BadRequest("User ID mismatch.");
             }
 
-            return Ok(project);
+            await _mediator.Send(command);
+            return NoContent();
+        }
+
+        [HttpGet("{id:guid}")]
+        public async Task<ActionResult<GetUserResult>> GetUser(Guid id)
+        {
+            var command = new GetUserQuery(id);
+            var user = await _mediator.Send(command);
+
+            if (user == null)
+            {
+                return NotFound($"User with ID not found.");
+            }
+
+            return Ok(user);
         }
     }
 }

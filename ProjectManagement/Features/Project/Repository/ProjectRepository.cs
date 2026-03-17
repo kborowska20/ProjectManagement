@@ -30,8 +30,8 @@ namespace ProjectManagement.Features.Project.Repository
                     .ToListAsync();
 
                 // Get distinct user IDs and task IDs
-                var userIds = userTaskAssignments.Select(upt => upt.UserId).Distinct().ToList();
-                var taskIds = userTaskAssignments.Select(upt => upt.TaskId).Distinct().ToList();
+                var userIds = userTaskAssignments.Where(ts => ts.ProjectId == project.Id).Select(x => x.UserId).ToList();
+                var taskIds = userTaskAssignments.Where(ts => ts.ProjectId == project.Id).Select(x => x.TaskId).ToList();
 
                 // Load users and tasks
                 project.Users = await _context.Users
@@ -68,6 +68,19 @@ namespace ProjectManagement.Features.Project.Repository
             }
 
             return projectStatus;
+        }
+
+        public async Task DeleteTaskFromProject(Guid projectId, Guid taskId)
+        {
+            var userTaskAssignments = await _context.UsersProjectTasks
+                .Where(upt => upt.ProjectId == projectId && upt.TaskId == taskId)
+                .ToListAsync();
+
+            if (userTaskAssignments.Any())
+            {
+                _context.UsersProjectTasks.RemoveRange(userTaskAssignments);
+                await _context.SaveChangesAsync();
+            }
         }
     }
 }

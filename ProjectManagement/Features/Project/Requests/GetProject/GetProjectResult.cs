@@ -2,7 +2,7 @@
 
 namespace ProjectManagement.Features.Project.Requests.GetProject
 {
-    public record GetTaskResult(
+    public record GetProjectResult(
         Guid Id,
         string ProjectName,
         string Description,

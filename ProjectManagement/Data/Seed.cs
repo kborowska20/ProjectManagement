@@ -11,89 +11,117 @@ namespace ProjectManagement.Data
             // Ensure roles exist first so users can reference them
             if (!context.UserRoles.Any())
             {
-                context.UserRoles.AddRange(
-                    new UserRole { Id = new Guid("11111111-3333-3333-4444-555555555559"), RoleName = "Admin" },
-                    new UserRole { Id = new Guid("11111111-3333-3333-4444-555555555558"), RoleName = "Manager" },
-                    new UserRole { Id = new Guid("11111111-3333-3333-4444-555555555666"), RoleName = "Developer" }
-                );
+                var roles = new[]
+                {
+                    new UserRole { Id = Guid.Parse("11111111-3333-3333-4444-555555555559"), RoleName = "Admin" },
+                    new UserRole { Id = Guid.Parse("11111111-3333-3333-4444-555555555558"), RoleName = "Manager" },
+                    new UserRole { Id = Guid.Parse("11111111-3333-3333-4444-555555555666"), RoleName = "Developer" }
+                };
+                context.UserRoles.AddRange(roles);
                 context.SaveChanges();
             }
 
-            // Create 5 users
+            // Create users with roles
             if (!context.Users.Any())
             {
-                context.Users.AddRange(
-                    new User { Id = new Guid("11111111-1111-1111-1111-111111111111"), Name = "Joe Doe", Email = "joe.doe@example.com"},
-                    new User { Id = new Guid("11111111-1111-1111-1111-111111111116"), Name = "Jane Smith", Email = "jane.smith@example.com" },
-                    new User { Id = new Guid("11111111-1111-1111-1111-111111111113"), Name = "Alice Johnson", Email = "alice.johnson@example.com" },
-                    new User { Id = new Guid("11111111-1111-1111-1111-111111111114"), Name = "Bob Brown", Email = "bob.brown@example.com" },
-                    new User { Id = new Guid("11111111-1111-1111-1111-111111111115"), Name = "Carol White", Email = "carol.white@example.com" }
-                );
+                var adminRole = context.UserRoles.Find(Guid.Parse("11111111-3333-3333-4444-555555555559"));
+                var managerRole = context.UserRoles.Find(Guid.Parse("11111111-3333-3333-4444-555555555558"));
+                var developerRole = context.UserRoles.Find(Guid.Parse("11111111-3333-3333-4444-555555555666"));
+
+                var users = new[]
+                {
+                    new User { Id = Guid.Parse("11111111-1111-1111-1111-111111111111"), Name = "Joe Doe", Email = "joe.doe@example.com", Role = adminRole },
+                    new User { Id = Guid.Parse("11111111-1111-1111-1111-111111111116"), Name = "Jane Smith", Email = "jane.smith@example.com", Role = managerRole },
+                    new User { Id = Guid.Parse("11111111-1111-1111-1111-111111111113"), Name = "Alice Johnson", Email = "alice.johnson@example.com", Role = developerRole },
+                    new User { Id = Guid.Parse("11111111-1111-1111-1111-111111111114"), Name = "Bob Brown", Email = "bob.brown@example.com", Role = developerRole },
+                    new User { Id = Guid.Parse("11111111-1111-1111-1111-111111111115"), Name = "Carol White", Email = "carol.white@example.com", Role = developerRole }
+                };
+                context.Users.AddRange(users);
                 context.SaveChanges();
             }
 
             // Create project statuses
             if (!context.ProjectStatuses.Any())
             {
-                context.ProjectStatuses.AddRange(
-                    new ProjectStatus { Id = new Guid("11111111-2222-3333-4444-555555555551"), StatusName = "Active" },
-                    new ProjectStatus { Id = new Guid("11111111-2222-3333-4444-555555555552"), StatusName = "On Hold" },
-                    new ProjectStatus { Id = new Guid("11111111-2222-3333-4444-555555555553"), StatusName = "Completed" }
-                );
+                var statuses = new[]
+                {
+                    new ProjectStatus { Id = Guid.Parse("11111111-2222-3333-4444-555555555551"), StatusName = "Active" },
+                    new ProjectStatus { Id = Guid.Parse("11111111-2222-3333-4444-555555555552"), StatusName = "On Hold" },
+                    new ProjectStatus { Id = Guid.Parse("11111111-2222-3333-4444-555555555553"), StatusName = "Completed" }
+                };
+                context.ProjectStatuses.AddRange(statuses);
                 context.SaveChanges();
             }
 
             // Create sample projects
             if (!context.Projects.Any())
             {
-                context.Projects.AddRange(
-                    new Project { Id = Guid.Parse("11111111-1111-1111-1111-111111111112"), Status = context.ProjectStatuses.Find(new Guid("11111111-2222-3333-4444-555555555551")),  ProjectName = "Project Delta", Description = "Internal tooling upgrade" },
-                    new Project { Id = Guid.Parse("11111111-2222-3333-4444-555555555556"), Status = context.ProjectStatuses.Find(new Guid("11111111-2222-3333-4444-555555555551")), ProjectName = "Project Epsilon", Description = "Customer onboarding improvements" },
-                    new Project { Id = Guid.Parse("11111111-2222-3333-4444-555555555557"), Status = context.ProjectStatuses.Find(new Guid("11111111-2222-3333-4444-555555555551")), ProjectName = "Project Zeta", Description = "Mobile app revamp" }
-                );
+                var activeStatus = context.ProjectStatuses.Find(Guid.Parse("11111111-2222-3333-4444-555555555551"));
+                var onHoldStatus = context.ProjectStatuses.Find(Guid.Parse("11111111-2222-3333-4444-555555555552"));
+
+                var projects = new[]
+                {
+                    new Project { Id = Guid.Parse("11111111-1111-1111-1111-111111111112"), Status = activeStatus, ProjectName = "Project Delta", Description = "Internal tooling upgrade" },
+                    new Project { Id = Guid.Parse("11111111-2222-3333-4444-555555555556"), Status = activeStatus, ProjectName = "Project Epsilon", Description = "Customer onboarding improvements" },
+                    new Project { Id = Guid.Parse("11111111-2222-3333-4444-555555555557"), Status = onHoldStatus, ProjectName = "Project Zeta", Description = "Mobile app revamp" }
+                };
+                context.Projects.AddRange(projects);
                 context.SaveChanges();
             }
 
-            // Replace the TaskItem seeding block with the following code to fix CS0029 errors
+            // Create task items
             if (!context.TaskItems.Any())
             {
-                context.TaskItems.AddRange(
-                    new TaskItem()
+                var user1 = context.Users.Find(Guid.Parse("11111111-1111-1111-1111-111111111111"));
+                var user2 = context.Users.Find(Guid.Parse("11111111-1111-1111-1111-111111111116"));
+                var user3 = context.Users.Find(Guid.Parse("11111111-1111-1111-1111-111111111113"));
+
+                var project1 = context.Projects.Find(Guid.Parse("11111111-1111-1111-1111-111111111112"));
+                var project2 = context.Projects.Find(Guid.Parse("11111111-2222-3333-4444-555555555556"));
+                var project3 = context.Projects.Find(Guid.Parse("11111111-2222-3333-4444-555555555557"));
+
+                // Fix for CS0029: Use the User's Id property instead of the User object itself
+                var tasks = new[]
+                {
+                    new TaskItem
                     {
-                        Id = new Guid("11111111-3333-3333-4444-555555555555"),
-                        Title = "Task 1",
-                        Desc = "Implement user authentication",
-                        User = context.Users.Find(new Guid("11111111-1111-1111-1111-111111111111")),
-                        Project = context.Projects.Find(new Guid("11111111-2222-3333-4444-555555555555"))
+                        Id = Guid.Parse("11111111-3333-3333-4444-555555555555"),
+                        Title = "Implement User Authentication",
+                        Description = "Create login and registration functionality with JWT tokens",
+                        AssignedUserId = user1.Id,
+                        ProjectId = project1.Id
+                    },  
+                    new TaskItem
+                    {
+                        Id = Guid.Parse("11111111-4444-3333-4444-555555555555"),
+                        Title = "Design Onboarding Flow",
+                        Description = "Create wireframes and mockups for new user onboarding experience",
+                        AssignedUserId = user2.Id,
+                        ProjectId = project2.Id
                     },
-                    new TaskItem()
+                    new TaskItem
                     {
-                        Id = new Guid("11111111-4444-3333-4444-555555555555"),
-                        Title = "Task 2",
-                        Desc = "Design onboarding flow",
-                        User = context.Users.Find(new Guid("11111111-1111-1111-1111-111111111112")),
-                        Project = context.Projects.Find(new Guid("11111111-2222-3333-4444-555555555556"))
-                    },
-                    new TaskItem()
-                    {
-                        Id = new Guid("11111111-5555-3333-4444-555555555555"),
-                        Title = "Task 3",
-                        Desc = "Update mobile UI components",
-                        User = context.Users.Find(new Guid("11111111-1111-1111-1111-111111111113")),
-                        Project = context.Projects.Find(new Guid("11111111-2222-3333-4444-555555555557"))
+                        Id = Guid.Parse("11111111-5555-3333-4444-555555555555"),
+                        Title = "Update Mobile UI Components",
+                        Description = "Modernize mobile app UI components using latest design system",
+                        AssignedUserId = user3.Id,
+                        ProjectId = project3.Id
                     }
-                );
+                };
+                context.TaskItems.AddRange(tasks);
                 context.SaveChanges();
             }
 
             // Assign users to projects and tasks
             if (!context.UsersProjectTasks.Any())
             {
-                context.UsersProjectTasks.AddRange(
-                    new UsersProjectTask { UserId = Guid.Parse("11111111-1111-1111-1111-111111111111"), ProjectId = Guid.Parse("11111111-2222-3333-4444-555555555555"), TaskId = Guid.Parse("11111111-3333-3333-4444-555555555555") },
-                    new UsersProjectTask { UserId = Guid.Parse("11111111-1111-1111-1111-111111111112"), ProjectId = Guid.Parse("11111111-2222-3333-4444-555555555556"), TaskId = Guid.Parse("11111111-4444-3333-4444-555555555555") },
+                var assignments = new[]
+                {
+                    new UsersProjectTask { UserId = Guid.Parse("11111111-1111-1111-1111-111111111111"), ProjectId = Guid.Parse("11111111-1111-1111-1111-111111111112"), TaskId = Guid.Parse("11111111-3333-3333-4444-555555555555") },
+                    new UsersProjectTask { UserId = Guid.Parse("11111111-1111-1111-1111-111111111116"), ProjectId = Guid.Parse("11111111-2222-3333-4444-555555555556"), TaskId = Guid.Parse("11111111-4444-3333-4444-555555555555") },
                     new UsersProjectTask { UserId = Guid.Parse("11111111-1111-1111-1111-111111111113"), ProjectId = Guid.Parse("11111111-2222-3333-4444-555555555557"), TaskId = Guid.Parse("11111111-5555-3333-4444-555555555555") }
-                );
+                };
+                context.UsersProjectTasks.AddRange(assignments);
                 context.SaveChanges();
             }
         }

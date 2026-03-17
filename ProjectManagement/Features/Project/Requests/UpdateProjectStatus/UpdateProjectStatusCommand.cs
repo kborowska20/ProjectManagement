@@ -1,6 +1,6 @@
 using MediatR;
 
-namespace ProjectManagement.Features.TaskItem.Requests.CreateTask
+namespace ProjectManagement.Features.Project.Requests.UpdateProjectStatus
 {
     public record UpdateProjectStatusCommand(
         Guid ProjectId,

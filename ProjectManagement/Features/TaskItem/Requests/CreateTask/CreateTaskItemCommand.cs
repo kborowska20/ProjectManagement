@@ -2,10 +2,10 @@ using MediatR;
 
 namespace ProjectManagement.Features.TaskItem.Requests.CreateTask
 {
-    public record UpdateUserRoleCommand(
-        string TaskName,
+    public record CreateTaskItemCommand(
+        string Title,
         string Description,
         Guid ProjectId,
-        DateTime? DueDate = null
+        Guid AssignedUserId
     ) : IRequest<Domain.TaskItem>;
 }

@@ -1,10 +1,9 @@
 using MediatR;
-using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using System;
 using ProjectManagement.Features.Project.Requests.AddUserToProject;
 using ProjectManagement.Features.Project.Requests.GetProject;
+using ProjectManagement.Features.Project.Requests.RemoveTaskItemFromProject;
+using ProjectManagement.Features.Project.Requests.UpdateProjectStatus;
 
 namespace ProjectManagement.Features.Project
 {
@@ -20,32 +19,45 @@ namespace ProjectManagement.Features.Project
         }
 
         [HttpGet("{id:guid}")]
-        public async Task<ActionResult> GetProject(Guid id)
+        public async Task<ActionResult<GetProjectResult>> GetProject(Guid id)
         {
-
-            var query = new GetTaskQuery(id);
+            var query = new GetProjectQuery(id);
             var project = await _mediator.Send(query);
 
             if (project == null)
             {
-                return NotFound($"Order with ID {id} not found.");
+                return NotFound($"Project with ID {id} not found.");
             }
 
             return Ok(project);
         }
 
-        [HttpPost]
-        public async Task<ActionResult> AssignUserToProject(AddUserToProjectCommand userToProjectCommand)
+        [HttpPost("assignUserToProject")]
+        public async Task<ActionResult<AddUserToProjectResult>> AssignUserToProject(AddUserToProjectCommand userToProjectCommand)
         {
+            var result = await _mediator.Send(userToProjectCommand);
 
-            var project = await _mediator.Send(userToProjectCommand);
-
-            if (project == null)
+            if (result == null)
             {
                 return NotFound($"Project with ID {userToProjectCommand.ProjectId} not found.");
             }
 
-            return Ok(project);
+            return Ok(result);
+        }
+
+        [HttpPut("updateProjectStatus")]
+        public async Task<ActionResult> UpdateProjectStatus(UpdateProjectStatusCommand updateProjectStatusCommand)
+        {
+            await _mediator.Send(updateProjectStatusCommand);
+            return NoContent();
+        }
+
+        [HttpDelete("deleteTaskFromProject")]
+        public async Task<ActionResult> DeleteTaskFromProject([FromQuery] Guid projectId, [FromQuery] Guid taskId)
+        {
+            var command = new RemoveTaskFromProjectCommand(projectId, taskId);
+            await _mediator.Send(command);
+            return NoContent();
         }
     }
 }

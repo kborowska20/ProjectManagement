@@ -1,20 +1,15 @@
-﻿using AutoMapper;
-using MediatR;
-using ProjectManagement.Domain;
-using ProjectManagement.Features.TaskItem.Requests.CreateTask;
+﻿using MediatR;
 using ProjectManagement.ServiceManager;
 
-namespace ProjectManagement.Features.TaskItem.Requests.CreateTask
+namespace ProjectManagement.Features.Project.Requests.UpdateProjectStatus
 {
     public class UpdateProjectStatusHandler : IRequestHandler<UpdateProjectStatusCommand>
     {
         private readonly IRepositoryManager _repositoryManager;
-        private readonly IMapper _mapper;
 
-        public UpdateProjectStatusHandler(IRepositoryManager repositoryManager, IMapper mapper)
+        public UpdateProjectStatusHandler(IRepositoryManager repositoryManager)
         {
             _repositoryManager = repositoryManager;
-            _mapper = mapper;
         }
 
         public async Task Handle(UpdateProjectStatusCommand request, CancellationToken cancellationToken)
@@ -22,14 +17,10 @@ namespace ProjectManagement.Features.TaskItem.Requests.CreateTask
             var project = await _repositoryManager.Project.GetProjectByIdAsync(request.ProjectId);
 
             if (project is null)
-                throw new ArgumentNullException("task not found");
+                throw new KeyNotFoundException($"Project with ID {request.ProjectId} not found");
 
-            var status = await _repositoryManager.Project.UpdateProjectStatus(request.ProjectId, request.StatusId);
-
+            await _repositoryManager.Project.UpdateProjectStatus(request.ProjectId, request.StatusId);
             await _repositoryManager.SaveAsync();
-            _mapper.Map(request, status);
-
-            return;
         }
     }
 }
