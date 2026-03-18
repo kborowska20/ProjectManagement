@@ -19,7 +19,7 @@ namespace ProjectManagement.Features.User.Requests.CreateUser
                 Id = Guid.NewGuid(),
                 Name = request.Name,
                 Email = request.Email,
-                Role = null // Will be loaded/set separately based on RoleId
+                UserRoleId = request.UserRoleId // Will be loaded/set separately based on RoleId
             };
 
             await _repositoryManager.User.CreateUserAsync(user);

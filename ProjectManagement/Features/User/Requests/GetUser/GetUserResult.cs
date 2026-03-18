@@ -6,6 +6,6 @@ namespace ProjectManagement.Features.User.Requests.GetUser
         Guid Id,
         string Name,
         string Email,
-        string Role
+        Guid? Role
     );
 }

@@ -22,10 +22,7 @@ namespace ProjectManagement.Features.User
         {
             var user = await _mediator.Send(command);
 
-            return CreatedAtAction(
-                nameof(GetUser),
-                "User created successfully"
-            );
+            return user;
         }
 
         [HttpPut]

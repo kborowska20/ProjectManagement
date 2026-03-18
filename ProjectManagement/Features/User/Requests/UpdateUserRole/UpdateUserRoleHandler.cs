@@ -26,7 +26,6 @@ namespace ProjectManagement.Features.User.Requests.UpdateUserRole
             var role = await _repositoryManager.User.UpdateUserRoleAsync(request.UserId, request.UserRoleId);
 
             await _repositoryManager.SaveAsync();
-            _mapper.Map(request, role);
 
             return;
         }

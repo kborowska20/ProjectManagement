@@ -30,11 +30,11 @@ namespace ProjectManagement.Data
 
                 var users = new[]
                 {
-                    new User { Id = Guid.Parse("11111111-1111-1111-1111-111111111111"), Name = "Joe Doe", Email = "joe.doe@example.com", Role = adminRole },
-                    new User { Id = Guid.Parse("11111111-1111-1111-1111-111111111116"), Name = "Jane Smith", Email = "jane.smith@example.com", Role = managerRole },
-                    new User { Id = Guid.Parse("11111111-1111-1111-1111-111111111113"), Name = "Alice Johnson", Email = "alice.johnson@example.com", Role = developerRole },
-                    new User { Id = Guid.Parse("11111111-1111-1111-1111-111111111114"), Name = "Bob Brown", Email = "bob.brown@example.com", Role = developerRole },
-                    new User { Id = Guid.Parse("11111111-1111-1111-1111-111111111115"), Name = "Carol White", Email = "carol.white@example.com", Role = developerRole }
+                    new User { Id = Guid.Parse("11111111-1111-1111-1111-111111111111"), Name = "Joe Doe", Email = "joe.doe@example.com", UserRoleId = adminRole.Id },
+                    new User { Id = Guid.Parse("11111111-1111-1111-1111-111111111116"), Name = "Jane Smith", Email = "jane.smith@example.com", UserRoleId = managerRole.Id },
+                    new User { Id = Guid.Parse("11111111-1111-1111-1111-111111111113"), Name = "Alice Johnson", Email = "alice.johnson@example.com", UserRoleId = developerRole.Id },
+                    new User { Id = Guid.Parse("11111111-1111-1111-1111-111111111114"), Name = "Bob Brown", Email = "bob.brown@example.com", UserRoleId = developerRole.Id },
+                    new User { Id = Guid.Parse("11111111-1111-1111-1111-111111111115"), Name = "Carol White", Email = "carol.white@example.com", UserRoleId = developerRole.Id }
                 };
                 context.Users.AddRange(users);
                 context.SaveChanges();
