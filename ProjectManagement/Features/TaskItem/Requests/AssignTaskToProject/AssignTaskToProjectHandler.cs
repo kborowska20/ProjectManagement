@@ -35,7 +35,7 @@ namespace ProjectManagement.Features.TaskItem.Requests
                 TaskId = request.TaskId,
                 UserId = null
             };
-            _repositoryManager.TaskItem.AssignTaskToUser(usersProjectTask);
+            _repositoryManager.TaskItem.AssignTaskToProject(usersProjectTask);
              
             await _repositoryManager.SaveAsync();
 

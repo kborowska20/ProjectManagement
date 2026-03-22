@@ -37,11 +37,7 @@ namespace ProjectManagement.Features.TaskItem
         {
             var task = await _mediator.Send(command);
 
-            return CreatedAtAction(
-                nameof(GetTask),
-                new { id = task.Id },
-                task
-            );
+            return task;
         }
 
         [HttpPost("assignUser")]

@@ -21,17 +21,16 @@ namespace ProjectManagement.Features.Project.Repository
 
             if (project != null)
             {
-                // No need to reload Status - it's already loaded
-                // project.Status = await _context.ProjectStatuses...
-
-                // Get all user-task assignments for this project
                 var userTaskAssignments = await _context.UsersProjectTasks
                     .Where(upt => upt.ProjectId == projectId)
                     .ToListAsync();
 
-                // Get distinct user IDs and task IDs
-                var userIds = userTaskAssignments.Where(ts => ts.ProjectId == project.Id).Select(x => x.UserId).ToList();
-                var taskIds = userTaskAssignments.Where(ts => ts.ProjectId == project.Id).Select(x => x.TaskId).ToList();
+                // Get distinct user IDs
+                var userIds = userTaskAssignments
+                    .Where(upt => upt.UserId.HasValue)
+                    .Select(upt => upt.UserId.Value)
+                    .Distinct()
+                    .ToList();
 
                 // Load users and tasks
                 project.Users = await _context.Users
@@ -39,8 +38,28 @@ namespace ProjectManagement.Features.Project.Repository
                     .ToListAsync();
 
                 project.Tasks = await _context.TaskItems
-                    .Where(t => taskIds.Contains(t.Id))
+                    .Where(t => t.ProjectId == project.Id)
                     .ToListAsync();
+
+                var userTaskIds = project.Tasks
+                    .Where(t => t.AssignedUserId.HasValue)
+                    .Select(t => t.AssignedUserId.Value)
+                    .Distinct()
+                    .ToList();
+
+                // Find users that are in tasks but not in project.Users
+                var existingUserIds = project.Users.Select(u => u.Id).ToList();
+                var missingUserIds = userTaskIds.Except(existingUserIds).ToList();
+
+                // Load and add missing users
+                if (missingUserIds.Any())
+                {
+                    var missingUsers = await _context.Users
+                        .Where(u => missingUserIds.Contains(u.Id))
+                        .ToListAsync();
+
+                    project.Users = project.Users.Concat(missingUsers).ToList();
+                }
             }
 
             return project;

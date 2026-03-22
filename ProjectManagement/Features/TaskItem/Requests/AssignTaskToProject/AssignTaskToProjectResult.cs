@@ -2,7 +2,5 @@
 {
     public record AssignTaskToProjectResult(
         Guid TaskId,
-        Guid ProjectId,
-        string TaskTitle
-    );
+        Guid ProjectId);
 }

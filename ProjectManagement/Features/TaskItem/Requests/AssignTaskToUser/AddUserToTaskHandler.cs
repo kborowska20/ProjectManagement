@@ -20,7 +20,7 @@ namespace ProjectManagement.Features.TaskItem.Requests.AddUserToProject
 
         public async Task<AddTaskToUserResult> Handle(AddTaskToUserCommand request, CancellationToken cancellationToken)
         {
-            var task = await _repositoryManager.TaskItem.GetTaskByIdAsync(request.TaskId);
+            var task = await _repositoryManager.TaskItem.GetTaskByIdAsync(request.TaskItemId);
 
             if (task  is null)
                 throw new ArgumentNullException("task not found");
@@ -33,7 +33,7 @@ namespace ProjectManagement.Features.TaskItem.Requests.AddUserToProject
             var usersProjectTask = new UsersProjectTask()
             {
                 ProjectId = null,
-                TaskId = request.TaskId,
+                TaskId = request.TaskItemId,
                 UserId = request.UserId
             };
             _repositoryManager.TaskItem.AssignTaskToUser(usersProjectTask);

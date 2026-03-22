@@ -16,20 +16,38 @@ namespace ProjectManagement.Features.TaskItem.Repository
 
             if (task != null && project is not null)
             {
-                await _context.UsersProjectTasks.AddAsync(usersProjectTask);
-                await _context.SaveChangesAsync();
+                try
+                {
+                    task.ProjectId = project.Id;
+                    _context.TaskItems.Update(task);
+                    await _context.SaveChangesAsync();
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    throw;
+                }
+
             }
         }
 
         public async Task AssignTaskToUser(UsersProjectTask usersProjectTask)
         {
             var task = await _context.TaskItems.FindAsync(usersProjectTask.TaskId);
-            var user = await _context.Users.FindAsync(usersProjectTask.ProjectId);
-
+            var user = await _context.Users.FindAsync(usersProjectTask.UserId);
             if (task != null && user is not null)
             {
-                await _context.UsersProjectTasks.AddAsync(usersProjectTask);
-                await _context.SaveChangesAsync();
+                try
+                {
+                    task.AssignedUserId = user.Id;
+                    _context.TaskItems.Update(task);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateException ex)
+                {
+                    // Handle database update exceptions
+                    Console.WriteLine($"Database update error: {ex.Message}");
+                }
             }
         }
 
