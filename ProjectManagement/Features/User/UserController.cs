@@ -11,7 +11,6 @@ namespace ProjectManagement.Features.User
     [ApiController]
     [Route("[controller]")]
     [ApplicationModule(Module.User)]
-    [AttributeUsage(System.AttributeTargets.Class, AllowMultiple = true)]
     public class UserController : ControllerBase
     {
         private readonly IMediator _mediator;
