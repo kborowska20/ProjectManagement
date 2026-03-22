@@ -1,5 +1,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using ProjectManagement.Attributes;
+using ProjectManagement.Enums;
 using ProjectManagement.Features.User.Requests.CreateUser;
 using ProjectManagement.Features.User.Requests.GetUser;
 using ProjectManagement.Features.User.Requests.UpdateUserRole;
@@ -8,6 +10,8 @@ namespace ProjectManagement.Features.User
 {
     [ApiController]
     [Route("[controller]")]
+    [ApplicationModule(Module.User)]
+    [AttributeUsage(System.AttributeTargets.Class, AllowMultiple = true)]
     public class UserController : ControllerBase
     {
         private readonly IMediator _mediator;

@@ -1,5 +1,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using ProjectManagement.Attributes;
+using ProjectManagement.Enums;
 using ProjectManagement.Features.TaskItem.Requests.AddUserToProject;
 using ProjectManagement.Features.TaskItem.Requests.AssignTaskToProject;
 using ProjectManagement.Features.TaskItem.Requests.CreateTask;
@@ -9,6 +11,8 @@ namespace ProjectManagement.Features.TaskItem
 {
     [ApiController]
     [Route("[controller]")]
+    [ApplicationModule(Module.Task)]
+
     public class TaskController : ControllerBase
     {
         private readonly IMediator _mediator;

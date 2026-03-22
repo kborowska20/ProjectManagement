@@ -1,5 +1,6 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using ProjectManagement.Attributes;
 using ProjectManagement.Features.Project.Requests.AddUserToProject;
 using ProjectManagement.Features.Project.Requests.GetProject;
 using ProjectManagement.Features.Project.Requests.RemoveTaskItemFromProject;
@@ -9,6 +10,7 @@ namespace ProjectManagement.Features.Project
 {
     [ApiController]
     [Route("[controller]")]
+    [MethodDescription("This is a Project controller.")]
     public class ProjectController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -19,6 +21,7 @@ namespace ProjectManagement.Features.Project
         }
 
         [HttpGet("{id:guid}")]
+        [LogMethodExecutionAttribute(nameof(GetProject))]
         public async Task<ActionResult<GetProjectResult>> GetProject(Guid id)
         {
             var query = new GetProjectQuery(id);
@@ -33,6 +36,7 @@ namespace ProjectManagement.Features.Project
         }
 
         [HttpPost("assignUserToProject")]
+        [LogMethodExecutionAttribute(nameof(AssignUserToProject))]
         public async Task<ActionResult<AddUserToProjectResult>> AssignUserToProject(AddUserToProjectCommand userToProjectCommand)
         {
             var result = await _mediator.Send(userToProjectCommand);
@@ -46,6 +50,7 @@ namespace ProjectManagement.Features.Project
         }
 
         [HttpPut("updateProjectStatus")]
+        [LogMethodExecutionAttribute(nameof(UpdateProjectStatus))]
         public async Task<ActionResult> UpdateProjectStatus(UpdateProjectStatusCommand updateProjectStatusCommand)
         {
             await _mediator.Send(updateProjectStatusCommand);
@@ -53,6 +58,7 @@ namespace ProjectManagement.Features.Project
         }
 
         [HttpDelete("deleteTaskFromProject")]
+        [LogMethodExecutionAttribute(nameof(DeleteTaskFromProject))]
         public async Task<ActionResult> DeleteTaskFromProject([FromQuery] Guid projectId, [FromQuery] Guid taskId)
         {
             var command = new RemoveTaskFromProjectCommand(projectId, taskId);
