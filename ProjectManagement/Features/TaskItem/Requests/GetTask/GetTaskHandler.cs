@@ -26,9 +26,7 @@ namespace ProjectManagement.Features.TaskItem.Requests.GetTask
             return new GetTaskResult(
                 task.Id,
                 task.Title,
-                task.Description,
-                task.ProjectId,
-                task.AssignedUserId
+                task.Description
             );
         }
     }

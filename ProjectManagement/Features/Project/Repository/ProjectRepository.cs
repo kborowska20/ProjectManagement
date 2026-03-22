@@ -25,41 +25,28 @@ namespace ProjectManagement.Features.Project.Repository
                     .Where(upt => upt.ProjectId == projectId)
                     .ToListAsync();
 
-                // Get distinct user IDs
                 var userIds = userTaskAssignments
                     .Where(upt => upt.UserId.HasValue)
                     .Select(upt => upt.UserId.Value)
                     .Distinct()
                     .ToList();
 
-                // Load users and tasks
+                // Get distinct task IDs from assignments
+                var taskIds = userTaskAssignments
+                    .Where(upt => upt.TaskId.HasValue)
+                    .Select(upt => upt.TaskId.Value)
+                    .Distinct()
+                    .ToList();
+
                 project.Users = await _context.Users
                     .Where(u => userIds.Contains(u.Id))
                     .ToListAsync();
 
+                // Load tasks
                 project.Tasks = await _context.TaskItems
-                    .Where(t => t.ProjectId == project.Id)
+                    .Where(t => taskIds.Contains(t.Id))
                     .ToListAsync();
 
-                var userTaskIds = project.Tasks
-                    .Where(t => t.AssignedUserId.HasValue)
-                    .Select(t => t.AssignedUserId.Value)
-                    .Distinct()
-                    .ToList();
-
-                // Find users that are in tasks but not in project.Users
-                var existingUserIds = project.Users.Select(u => u.Id).ToList();
-                var missingUserIds = userTaskIds.Except(existingUserIds).ToList();
-
-                // Load and add missing users
-                if (missingUserIds.Any())
-                {
-                    var missingUsers = await _context.Users
-                        .Where(u => missingUserIds.Contains(u.Id))
-                        .ToListAsync();
-
-                    project.Users = project.Users.Concat(missingUsers).ToList();
-                }
             }
 
             return project;

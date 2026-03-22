@@ -18,8 +18,9 @@ namespace ProjectManagement.Features.TaskItem.Repository
             {
                 try
                 {
-                    task.ProjectId = project.Id;
-                    _context.TaskItems.Update(task);
+                    //task.ProjectId = project.Id;
+                    //_context.TaskItems.Update(task);
+                    _context.UsersProjectTasks.Add(usersProjectTask);
                     await _context.SaveChangesAsync();
                 }
                 catch (Exception e)
@@ -39,8 +40,9 @@ namespace ProjectManagement.Features.TaskItem.Repository
             {
                 try
                 {
-                    task.AssignedUserId = user.Id;
-                    _context.TaskItems.Update(task);
+                    //task.AssignedUserId = user.Id;
+                    //_context.TaskItems.Update(task);
+                    _context.UsersProjectTasks.Add(usersProjectTask);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateException ex)

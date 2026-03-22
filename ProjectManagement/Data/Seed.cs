@@ -30,11 +30,11 @@ namespace ProjectManagement.Data
 
                 var users = new[]
                 {
-                    new User { Id = Guid.Parse("11111111-1111-1111-1111-111111111111"), Name = "Joe Doe", Email = "joe.doe@example.com", UserRoleId = adminRole.Id },
-                    new User { Id = Guid.Parse("11111111-1111-1111-1111-111111111116"), Name = "Jane Smith", Email = "jane.smith@example.com", UserRoleId = managerRole.Id },
-                    new User { Id = Guid.Parse("11111111-1111-1111-1111-111111111113"), Name = "Alice Johnson", Email = "alice.johnson@example.com", UserRoleId = developerRole.Id },
-                    new User { Id = Guid.Parse("11111111-1111-1111-1111-111111111114"), Name = "Bob Brown", Email = "bob.brown@example.com", UserRoleId = developerRole.Id },
-                    new User { Id = Guid.Parse("11111111-1111-1111-1111-111111111115"), Name = "Carol White", Email = "carol.white@example.com", UserRoleId = developerRole.Id }
+                    new User { Id = Guid.Parse("11111111-1111-1111-1111-111111111111"), Name = "Joe Doe", Email = "joe.doe@example.com", UserRole = adminRole },
+                    new User { Id = Guid.Parse("11111111-1111-1111-1111-111111111116"), Name = "Jane Smith", Email = "jane.smith@example.com", UserRole = managerRole },
+                    new User { Id = Guid.Parse("11111111-1111-1111-1111-111111111113"), Name = "Alice Johnson", Email = "alice.johnson@example.com", UserRole = developerRole },
+                    new User { Id = Guid.Parse("11111111-1111-1111-1111-111111111114"), Name = "Bob Brown", Email = "bob.brown@example.com", UserRole = developerRole },
+                    new User { Id = Guid.Parse("11111111-1111-1111-1111-111111111115"), Name = "Carol White", Email = "carol.white@example.com", UserRole = developerRole}
                 };
                 context.Users.AddRange(users);
                 context.SaveChanges();
@@ -87,25 +87,19 @@ namespace ProjectManagement.Data
                     {
                         Id = Guid.Parse("11111111-3333-3333-4444-555555555555"),
                         Title = "Implement User Authentication",
-                        Description = "Create login and registration functionality with JWT tokens",
-                        AssignedUserId = user1.Id,
-                        ProjectId = project1.Id
+                        Description = "Create login and registration functionality with JWT tokens"
                     },  
                     new TaskItem
                     {
                         Id = Guid.Parse("11111111-4444-3333-4444-555555555555"),
                         Title = "Design Onboarding Flow",
-                        Description = "Create wireframes and mockups for new user onboarding experience",
-                        AssignedUserId = user2.Id,
-                        ProjectId = project2.Id
+                        Description = "Create wireframes and mockups for new user onboarding experience"
                     },
                     new TaskItem
                     {
                         Id = Guid.Parse("11111111-5555-3333-4444-555555555555"),
                         Title = "Update Mobile UI Components",
-                        Description = "Modernize mobile app UI components using latest design system",
-                        AssignedUserId = user3.Id,
-                        ProjectId = project3.Id
+                        Description = "Modernize mobile app UI components using latest design system"
                     }
                 };
                 context.TaskItems.AddRange(tasks);

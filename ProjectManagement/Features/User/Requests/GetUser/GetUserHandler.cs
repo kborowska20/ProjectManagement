@@ -27,7 +27,7 @@ namespace ProjectManagement.Features.User.Requests.GetUser
                 user.Id,
                 user.Name,
                 user.Email,
-                user.UserRoleId // Fix: Pass RoleName (string) instead of UserRoleId (UserRole)
+                user.UserRole // Fix: Pass RoleName (string) instead of UserRoleId (UserRole)
             );
         }
     }

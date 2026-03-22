@@ -18,9 +18,7 @@ namespace ProjectManagement.Features.TaskItem.Requests.CreateTask
             {
                 Id = Guid.NewGuid(),
                 Title = request.Title,
-                Description = request.Description,
-                ProjectId = request.ProjectId,
-                AssignedUserId = request.AssignedUserId
+                Description = request.Description
             };
             await _repositoryManager.TaskItem.CreateTaskAsync(taskItem);
             await _repositoryManager.SaveAsync();
