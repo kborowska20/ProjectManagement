@@ -1,6 +1,8 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using ProjectManagement.Attributes;
+using ProjectManagement.Enums;
+using ProjectManagement.Features.Authentication;
 using ProjectManagement.Features.Project.Requests.AddUserToProject;
 using ProjectManagement.Features.Project.Requests.GetProject;
 using ProjectManagement.Features.Project.Requests.RemoveTaskItemFromProject;
@@ -10,6 +12,7 @@ namespace ProjectManagement.Features.Project
 {
     [ApiController]
     [Route("[controller]")]
+    [Authorization(Role.Customer)]
     [MethodDescription("This is a Project controller.")]
     public class ProjectController : ControllerBase
     {

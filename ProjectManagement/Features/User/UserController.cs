@@ -11,11 +11,11 @@ namespace ProjectManagement.Features.User
     [ApiController]
     [Route("[controller]")]
     [ApplicationModule(Module.User)]
-    public class UserController : ControllerBase
+    public class AuthController : ControllerBase
     {
         private readonly IMediator _mediator;
 
-        public UserController(IMediator mediator)
+        public AuthController(IMediator mediator)
         {
             _mediator = mediator;
         }
