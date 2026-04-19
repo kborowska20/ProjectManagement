@@ -1,5 +1,6 @@
 using MediatR;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ProjectManagement.Attributes;
 using ProjectManagement.Enums;
@@ -11,20 +12,56 @@ namespace ProjectManagement.Features.Authentication
 {
     [ApiController]
     [Route("[controller]")]
-    [ApplicationModule(Module.User)]
-    public class AuthController : Controller
+    [ApplicationModule(Module.Authentication)]
+    public class AuthController : ControllerBase
     {
-        private readonly IAuthenticationService authenticationService;
+        private readonly IAuthenticationService _authenticationService;
+
         public AuthController(IAuthenticationService authenticationService)
         {
-            this.authenticationService = authenticationService;
+            _authenticationService = authenticationService;
         }
-        [HttpPost]
-        [Route("Login")]
-        public AuthenticateResponse Login(AuthenticateRequest model)
-        {
-            return this.authenticationService.Authenticate(model);
 
+        [AllowAnonymous]
+        [HttpPost("login")]
+        public IActionResult Login([FromBody] AuthenticateRequest model)
+        {
+            var response = _authenticationService.Authenticate(model);
+
+            if (response == null)
+            {
+                return Unauthorized(new { message = "Username or password is incorrect" });
+            }
+
+            return Ok(response);
+        }
+
+        [Authorize]
+        [HttpGet("validate")]
+        public IActionResult ValidateToken()
+        {
+            var user = HttpContext.Items["User"];
+
+            if (user == null)
+            {
+                return Unauthorized(new { message = "Invalid token" });
+            }
+
+            return Ok(new { message = "Token is valid", user });
+        }
+
+        [Authorize]
+        [HttpGet("me")]
+        public IActionResult GetCurrentUser()
+        {
+            var user = HttpContext.Items["User"];
+
+            if (user == null)
+            {
+                return Unauthorized(new { message = "User not found" });
+            }
+
+            return Ok(user);
         }
     }
 }
