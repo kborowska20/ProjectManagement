@@ -1,3 +1,4 @@
+using AutoMapper;
 using FluentAssertions;
 using Moq;
 using ProjectManagement.Features.Project.Repository;
@@ -12,13 +13,15 @@ namespace ProjectManagement.Tests.Features.Project.Requests.GetProject
         private readonly Mock<IRepositoryManager> _repositoryManagerMock;
         private readonly Mock<IProjectRepository> _projectRepositoryMock;
         private readonly GetProjectHandler _handler;
+        private readonly Mock<IMapper> _mapperMock;
 
         public GetProjectHandlerTests()
         {
             _repositoryManagerMock = new Mock<IRepositoryManager>();
             _projectRepositoryMock = new Mock<IProjectRepository>();
             _repositoryManagerMock.Setup(x => x.Project).Returns(_projectRepositoryMock.Object);
-            _handler = new GetProjectHandler(_repositoryManagerMock.Object);
+            _mapperMock = new Mock<IMapper>();
+            _handler = new GetProjectHandler(_repositoryManagerMock.Object, _mapperMock.Object);
         }
 
         [Fact]

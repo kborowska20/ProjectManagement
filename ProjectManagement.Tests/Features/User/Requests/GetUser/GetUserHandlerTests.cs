@@ -1,3 +1,4 @@
+using AutoMapper;
 using FluentAssertions;
 using Moq;
 using ProjectManagement.Domain;
@@ -11,11 +12,13 @@ namespace ProjectManagement.Tests.Features.User.Requests.GetUser
     {
         private readonly Mock<IRepositoryManager> _repositoryManagerMock;
         private readonly GetUserHandler _handler;
+        private readonly Mock<IMapper> _mapperMock;
 
         public GetUserHandlerTests()
         {
             _repositoryManagerMock = new Mock<IRepositoryManager>();
-            _handler = new GetUserHandler(_repositoryManagerMock.Object);
+            _mapperMock = new Mock<IMapper>();
+            _handler = new GetUserHandler(_repositoryManagerMock.Object, _mapperMock.Object);
         }
 
         [Fact]
@@ -29,7 +32,6 @@ namespace ProjectManagement.Tests.Features.User.Requests.GetUser
                 Id = userId,
                 Name = "John Doe",
                 Email = "john@example.com",
-                UserRoleId = roleId,
                 UserRole = new UserRole { Id = roleId, RoleName = "Admin" }
             };
 

@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Moq;
 using ProjectManagement.Data;
 using ProjectManagement.Domain;
+using ProjectManagement.Features.Project.Repository;
 using ProjectManagement.Features.Project.Requests.RemoveTaskItemFromProject;
 using ProjectManagement.ServiceManager;
 using Xunit;
@@ -13,6 +14,7 @@ namespace ProjectManagement.Tests.Features.Project.Requests.RemoveTaskItemFromPr
     {
         private readonly DataContext _context;
         private readonly Mock<IRepositoryManager> _repositoryManagerMock;
+        private readonly Mock<IProjectRepository> _projectRepositoryMock;
         private readonly RemoveTaskFromProjectHandler _handler;
 
         public RemoveTaskFromProjectHandlerTests()
@@ -23,6 +25,8 @@ namespace ProjectManagement.Tests.Features.Project.Requests.RemoveTaskItemFromPr
 
             _context = new DataContext(options);
             _repositoryManagerMock = new Mock<IRepositoryManager>();
+            _projectRepositoryMock = new Mock<IProjectRepository>();
+            _repositoryManagerMock.Setup(x => x.Project).Returns(_projectRepositoryMock.Object);
             _handler = new RemoveTaskFromProjectHandler(_repositoryManagerMock.Object, _context);
         }
 
@@ -39,16 +43,18 @@ namespace ProjectManagement.Tests.Features.Project.Requests.RemoveTaskItemFromPr
             );
             await _context.SaveChangesAsync();
 
-            var command = new RemoveTaskFromProjectCommand(taskId, projectId);
+            var command = new RemoveTaskFromProjectCommand(projectId, taskId);
+
+            _projectRepositoryMock.Setup(x => x.DeleteTaskFromProject(projectId, taskId))
+                .Returns(Task.CompletedTask);
+            _repositoryManagerMock.Setup(x => x.SaveAsync()).Returns(Task.CompletedTask);
 
             // Act
             await _handler.Handle(command, CancellationToken.None);
 
             // Assert
-            var remainingAssignments = await _context.UsersProjectTasks
-                .Where(upt => upt.ProjectId == projectId && upt.TaskId == taskId)
-                .ToListAsync();
-            remainingAssignments.Should().BeEmpty();
+            _projectRepositoryMock.Verify(x => x.DeleteTaskFromProject(projectId, taskId), Times.Once);
+            _repositoryManagerMock.Verify(x => x.SaveAsync(), Times.Once);
         }
 
         [Fact]
@@ -57,7 +63,11 @@ namespace ProjectManagement.Tests.Features.Project.Requests.RemoveTaskItemFromPr
             // Arrange
             var projectId = Guid.NewGuid();
             var taskId = Guid.NewGuid();
-            var command = new RemoveTaskFromProjectCommand(taskId, projectId);
+            var command = new RemoveTaskFromProjectCommand(projectId, taskId);
+
+            _projectRepositoryMock.Setup(x => x.DeleteTaskFromProject(projectId, taskId))
+                .Returns(Task.CompletedTask);
+            _repositoryManagerMock.Setup(x => x.SaveAsync()).Returns(Task.CompletedTask);
 
             // Act
             Func<Task> act = async () => await _handler.Handle(command, CancellationToken.None);
@@ -80,15 +90,18 @@ namespace ProjectManagement.Tests.Features.Project.Requests.RemoveTaskItemFromPr
             );
             await _context.SaveChangesAsync();
 
-            var command = new RemoveTaskFromProjectCommand(taskId, projectId);
+            var command = new RemoveTaskFromProjectCommand(projectId, taskId);
+
+            _projectRepositoryMock.Setup(x => x.DeleteTaskFromProject(projectId, taskId))
+                .Returns(Task.CompletedTask);
+            _repositoryManagerMock.Setup(x => x.SaveAsync()).Returns(Task.CompletedTask);
 
             // Act
             await _handler.Handle(command, CancellationToken.None);
 
             // Assert
-            var remainingAssignments = await _context.UsersProjectTasks.ToListAsync();
-            remainingAssignments.Should().HaveCount(1);
-            remainingAssignments.First().TaskId.Should().Be(otherTaskId);
+            _projectRepositoryMock.Verify(x => x.DeleteTaskFromProject(projectId, taskId), Times.Once);
+            _repositoryManagerMock.Verify(x => x.SaveAsync(), Times.Once);
         }
 
         public void Dispose()

@@ -21,7 +21,7 @@ namespace ProjectManagement.Features.User.Requests.UpdateUserRole
             var user = await _repositoryManager.User.GetUserByIdAsync(request.UserId);
 
             if (user is null)
-                throw new ArgumentNullException("user not found");
+                throw new KeyNotFoundException("user not found");
 
             var role = await _repositoryManager.User.UpdateUserRoleAsync(request.UserId, request.UserRoleId);
 

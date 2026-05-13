@@ -1,3 +1,4 @@
+using AutoMapper;
 using FluentAssertions;
 using Moq;
 using ProjectManagement.Features.TaskItem.Requests.GetTask;
@@ -10,11 +11,13 @@ namespace ProjectManagement.Tests.Features.TaskItem.Requests.GetTask
     {
         private readonly Mock<IRepositoryManager> _repositoryManagerMock;
         private readonly GetTaskHandler _handler;
+        private readonly Mock<IMapper> _mapperMock;
 
         public GetTaskHandlerTests()
         {
             _repositoryManagerMock = new Mock<IRepositoryManager>();
-            _handler = new GetTaskHandler(_repositoryManagerMock.Object);
+            _mapperMock = new Mock<IMapper>();
+            _handler = new GetTaskHandler(_repositoryManagerMock.Object, _mapperMock.Object);
         }
 
         [Fact]

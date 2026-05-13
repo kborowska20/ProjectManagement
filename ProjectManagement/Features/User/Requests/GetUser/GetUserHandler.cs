@@ -21,7 +21,7 @@ namespace ProjectManagement.Features.User.Requests.GetUser
             var user = await _repositoryManager.User.GetUserByIdAsync(request.Id);
 
             if (user is null)
-                throw new ArgumentNullException(nameof(user), "User not found");
+                return null;
 
             return new GetUserResult(
                 user.Id,

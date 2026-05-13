@@ -20,7 +20,7 @@ namespace ProjectManagement.Features.Project.Requests.GetProject
             var project = await _repositoryManager.Project.GetProjectByIdAsync(request.Id);
 
             if (project is null)
-                throw new ArgumentNullException("proj not found");
+                return null;
 
             return new GetProjectResult(project.Id, project.ProjectName, project.Description, project.Status, project.Users, project.Tasks);
         }

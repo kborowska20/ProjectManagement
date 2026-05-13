@@ -33,7 +33,7 @@ namespace ProjectManagement.Tests.Features.Project.Repository
 
             var status = new ProjectStatus { Id = statusId, StatusName = "Active" };
             var user = new Domain.User { Id = userId, Name = "Test User", Email = "test@example.com" };
-            var task = new Domain.TaskItem { Id = taskId, Title = "Test Task", Desc = "Description" };
+            var task = new Domain.TaskItem { Id = taskId, Title = "Test Task", Description = "Description" };
             var project = new Domain.Project
             {
                 Id = projectId,
@@ -116,6 +116,7 @@ namespace ProjectManagement.Tests.Features.Project.Repository
             {
                 Id = projectId,
                 ProjectName = "Test Project",
+                Description = "Test Description",
                 Status = oldStatus
             };
 
@@ -141,6 +142,10 @@ namespace ProjectManagement.Tests.Features.Project.Repository
             // Arrange
             var projectId = Guid.NewGuid();
             var statusId = Guid.NewGuid();
+
+            var status = new ProjectStatus { Id = statusId, StatusName = "Active" };
+            _context.ProjectStatuses.Add(status);
+            await _context.SaveChangesAsync();
 
             // Act & Assert
             await Assert.ThrowsAsync<KeyNotFoundException>(() => 

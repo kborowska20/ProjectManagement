@@ -1,3 +1,4 @@
+using AutoMapper;
 using FluentAssertions;
 using Moq;
 using ProjectManagement.Domain;
@@ -10,12 +11,14 @@ namespace ProjectManagement.Tests.Features.Project.Requests.AddUserToProject
     public class AddUserToProjectHandlerTests
     {
         private readonly Mock<IRepositoryManager> _repositoryManagerMock;
+        private readonly Mock<IMapper> _mapperMock;
         private readonly AddUserToProjectHandler _handler;
 
         public AddUserToProjectHandlerTests()
         {
             _repositoryManagerMock = new Mock<IRepositoryManager>();
-            _handler = new AddUserToProjectHandler(_repositoryManagerMock.Object);
+            _mapperMock = new Mock<IMapper>();
+            _handler = new AddUserToProjectHandler(_repositoryManagerMock.Object, _mapperMock.Object);
         }
 
         [Fact]
@@ -26,9 +29,19 @@ namespace ProjectManagement.Tests.Features.Project.Requests.AddUserToProject
             var projectId = Guid.NewGuid();
             var command = new AddUserToProjectCommand(userId, projectId);
 
+            var project = new Domain.Project { Id = projectId, ProjectName = "Test Project", Description = "Test" };
+            var user = new Domain.User { Id = userId, Name = "Test User", Email = "test@example.com" };
+            var expectedResult = new AddUserToProjectResult(userId, projectId);
+
+            _repositoryManagerMock.Setup(x => x.Project.GetProjectByIdAsync(projectId))
+                .ReturnsAsync(project);
+            _repositoryManagerMock.Setup(x => x.User.GetUserByIdAsync(userId))
+                .ReturnsAsync(user);
             _repositoryManagerMock.Setup(x => x.Project.AssignUserToProject(It.IsAny<UsersProjectTask>()))
                 .Returns(Task.CompletedTask);
             _repositoryManagerMock.Setup(x => x.SaveAsync()).Returns(Task.CompletedTask);
+            _mapperMock.Setup(x => x.Map<AddUserToProjectResult>(It.IsAny<UsersProjectTask>()))
+                .Returns(expectedResult);
 
             // Act
             var result = await _handler.Handle(command, CancellationToken.None);
@@ -51,7 +64,14 @@ namespace ProjectManagement.Tests.Features.Project.Requests.AddUserToProject
             var projectId = Guid.NewGuid();
             var command = new AddUserToProjectCommand(userId, projectId);
 
+            var project = new Domain.Project { Id = projectId, ProjectName = "Test Project", Description = "Test" };
+            var user = new Domain.User { Id = userId, Name = "Test User", Email = "test@example.com" };
+
             UsersProjectTask capturedTask = null;
+            _repositoryManagerMock.Setup(x => x.Project.GetProjectByIdAsync(projectId))
+                .ReturnsAsync(project);
+            _repositoryManagerMock.Setup(x => x.User.GetUserByIdAsync(userId))
+                .ReturnsAsync(user);
             _repositoryManagerMock.Setup(x => x.Project.AssignUserToProject(It.IsAny<UsersProjectTask>()))
                 .Callback<UsersProjectTask>(upt => capturedTask = upt)
                 .Returns(Task.CompletedTask);

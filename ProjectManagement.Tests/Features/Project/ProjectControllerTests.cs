@@ -43,7 +43,7 @@ namespace ProjectManagement.Tests.Features.Project
             var result = await _controller.GetProject(projectId);
 
             // Assert
-            var okResult = result.Should().BeOfType<OkObjectResult>().Subject;
+            var okResult = result.Result.Should().BeOfType<OkObjectResult>().Subject;
             okResult.Value.Should().Be(projectResult);
         }
 
@@ -59,7 +59,7 @@ namespace ProjectManagement.Tests.Features.Project
             var result = await _controller.GetProject(projectId);
 
             // Assert
-            result.Should().BeOfType<NotFoundObjectResult>();
+            result.Result.Should().BeOfType<NotFoundObjectResult>();
         }
 
         [Fact]
@@ -76,7 +76,7 @@ namespace ProjectManagement.Tests.Features.Project
             var result = await _controller.AssignUserToProject(command);
 
             // Assert
-            var okResult = result.Should().BeOfType<OkObjectResult>().Subject;
+            var okResult = result.Result.Should().BeOfType<OkObjectResult>().Subject;
             okResult.Value.Should().Be(expectedResult);
         }
 
@@ -92,7 +92,7 @@ namespace ProjectManagement.Tests.Features.Project
             var result = await _controller.AssignUserToProject(command);
 
             // Assert
-            result.Should().BeOfType<NotFoundObjectResult>();
+            result.Result.Should().BeOfType<NotFoundObjectResult>();
         }
 
         [Fact]
@@ -125,7 +125,7 @@ namespace ProjectManagement.Tests.Features.Project
             // Assert
             result.Should().BeOfType<NoContentResult>();
             _mediatorMock.Verify(x => x.Send(
-                It.Is<RemoveTaskFromProjectCommand>(c => c.ProjectId == projectId && c.TaskItemId == taskId),
+                It.Is<RemoveTaskFromProjectCommand>(c => c.ProjectId == projectId && c.TaskId == taskId),
                 It.IsAny<CancellationToken>()), Times.Once);
         }
     }

@@ -1,3 +1,4 @@
+using AutoMapper;
 using FluentAssertions;
 using Moq;
 using ProjectManagement.Domain;
@@ -11,11 +12,13 @@ namespace ProjectManagement.Tests.Features.User.Requests.UpdateUserRole
     {
         private readonly Mock<IRepositoryManager> _repositoryManagerMock;
         private readonly UpdateUserRoleHandler _handler;
+        private readonly Mock<IMapper> _mapperMock;
 
         public UpdateUserRoleHandlerTests()
         {
             _repositoryManagerMock = new Mock<IRepositoryManager>();
-            _handler = new UpdateUserRoleHandler(_repositoryManagerMock.Object);
+            _mapperMock = new Mock<IMapper>();
+            _handler = new UpdateUserRoleHandler(_repositoryManagerMock.Object, _mapperMock.Object);
         }
 
         [Fact]

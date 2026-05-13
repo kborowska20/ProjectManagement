@@ -61,17 +61,19 @@ namespace ProjectManagement.Features.Project.Repository
         public async Task<ProjectStatus> UpdateProjectStatus(Guid projectId, Guid statusId)
         {
             var project = await _context.Projects.FindAsync(projectId);
+            if (project == null)
+            {
+                throw new KeyNotFoundException($"Project with ID {projectId} not found");
+            }
+
             var projectStatus = await _context.ProjectStatuses.FindAsync(statusId);
             if (projectStatus == null)
             {
-                throw new ArgumentNullException("task not found");
+                throw new KeyNotFoundException($"Status with ID {statusId} not found");
             }
 
-            if (project != null && projectStatus is not null)
-            {
-                project.Status = projectStatus;
-                await _context.SaveChangesAsync();
-            }
+            project.Status = projectStatus;
+            await _context.SaveChangesAsync();
 
             return projectStatus;
         }

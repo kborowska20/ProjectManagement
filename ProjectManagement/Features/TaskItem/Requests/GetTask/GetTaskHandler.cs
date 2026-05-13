@@ -21,7 +21,7 @@ namespace ProjectManagement.Features.TaskItem.Requests.GetTask
             var task = await _repositoryManager.TaskItem.GetTaskByIdAsync(request.Id);
 
             if (task is null)
-                throw new ArgumentNullException(nameof(task), "Task not found");
+                return null;
 
             return new GetTaskResult(
                 task.Id,

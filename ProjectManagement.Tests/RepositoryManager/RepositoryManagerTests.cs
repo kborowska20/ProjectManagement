@@ -2,6 +2,9 @@ using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using ProjectManagement.Data;
 using ProjectManagement.ServiceManager;
+using ProjectManagement.Features.User.Repository;
+using ProjectManagement.Features.TaskItem.Repository;
+using ProjectManagement.Features.Project.Repository;
 using Xunit;
 
 namespace ProjectManagement.Tests.RepositoryManager
@@ -29,7 +32,7 @@ namespace ProjectManagement.Tests.RepositoryManager
 
             // Assert
             userRepository.Should().NotBeNull();
-            userRepository.Should().BeAssignableTo<Features.User.Repository.IUserRepository>();
+            userRepository.Should().BeAssignableTo<IUserRepository>();
         }
 
         [Fact]
@@ -40,7 +43,7 @@ namespace ProjectManagement.Tests.RepositoryManager
 
             // Assert
             taskRepository.Should().NotBeNull();
-            taskRepository.Should().BeAssignableTo<Features.TaskItem.Repository.ITaskItemRepository>();
+            taskRepository.Should().BeAssignableTo<ITaskItemRepository>();
         }
 
         [Fact]
@@ -51,7 +54,7 @@ namespace ProjectManagement.Tests.RepositoryManager
 
             // Assert
             projectRepository.Should().NotBeNull();
-            projectRepository.Should().BeAssignableTo<Features.Project.Repository.IProjectRepository>();
+            projectRepository.Should().BeAssignableTo<IProjectRepository>();
         }
 
         [Fact]
